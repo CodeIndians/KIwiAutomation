@@ -234,6 +234,10 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
+            If customga = "" Then
+                customga = "0"
+            End If
+            
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
             
@@ -336,6 +340,10 @@ Sub FillCompositeData(Worksheet, obj, ByRef myArray)
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
+            If customga = "" Then
+                customga = "0"
+            End If
+            
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
             
@@ -435,6 +443,10 @@ Sub FillRoofData(Worksheet, obj, ByRef myArray)
             ' Add extra custom items
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
+            
+            If customga = "" Then
+                customga = "0"
+            End If
             
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
@@ -538,6 +550,10 @@ Sub FillPartitionData(Worksheet, obj, ByRef myArray)
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
+            If customga = "" Then
+                customga = "0"
+            End If
+            
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
             
@@ -640,6 +656,10 @@ Sub FillLinerData(Worksheet, obj, ByRef myArray)
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
+            If customga = "" Then
+                customga = "0"
+            End If
+            
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
             
@@ -740,6 +760,10 @@ Sub FillSidingData(Worksheet, obj, ByRef myArray)
             ' Add extra custom items
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
+            
+            If customga = "" Then
+                customga = "0"
+            End If
             
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
@@ -843,6 +867,10 @@ Sub FillInsulationData(Worksheet, obj, ByRef myArray)
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
+            If customga = "" Then
+                customga = "0"
+            End If
+            
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
             
@@ -944,6 +972,10 @@ Sub FillAnchorsData(Worksheet, obj, ByRef myArray)
             ' Add extra custom items
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
+            
+            If customga = "" Then
+                customga = "0"
+            End If
             
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
@@ -1048,6 +1080,10 @@ Sub FillFastnersData(Worksheet, obj, ByRef myArray)
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
+            If customga = "" Then
+                customga = "0"
+            End If
+            
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
             
@@ -1150,6 +1186,10 @@ Sub FillMiscData(Worksheet, obj, ByRef myArray)
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
+            If customga = "" Then
+                customga = "0"
+            End If
+            
             obj.FindElementById("CUSTOMga").SendKeys (customga)
             obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
             
@@ -1170,12 +1210,18 @@ Sub SplitDimensions(Dimentions, ByRef var1, ByRef var2, ByRef var3)
         ' Split the string into parts
         parts = Split(Dimentions, " - ")
         
-        ' Assign the parts to separate variables
-        var1 = Split(parts(0), "'")(0)
-        var2 = Split(parts(1), " ")(0)
-        If UBound(Split(parts(1), " ")) > 0 Then
-            var3 = Split(parts(1), " ")(1)
+        If UBound(parts) > 0 Then
+            ' Assign the parts to separate variables
+            var1 = Split(parts(0), "'")(0)
+            var2 = Split(parts(1), " ")(0)
+            If UBound(Split(parts(1), " ")) > 0 Then
+                var3 = Split(parts(1), " ")(1)
+            Else
+                var3 = ""
+            End If
         Else
+            var1 = ""
+            var2 = ""
             var3 = ""
         End If
 End Sub

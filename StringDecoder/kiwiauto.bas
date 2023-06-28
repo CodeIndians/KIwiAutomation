@@ -90,43 +90,43 @@ Sub chromeAuto()
     
     ' call light gauge
     Call GetWorksheet("LIGHT GAUGE", currenWorkSheet)
-    Call FillStructuralData(currenWorkSheet, obj, structuralArray)
+    Call FillData(currenWorkSheet, obj, structuralArray, "STRUCTURALdatalist", "colorSTRUCTURAL", "noteSTRUCTURAL", "unitSTRUCTURAL", "ftSTRUCTURAL", "inchSTRUCTURAL", "fractionDropSTRUCTURAL", "pmSTRUCTURAL", 1)
     
     ' call composite deck
     Call GetWorksheet("COMPOSITE DECK", currenWorkSheet)
-    Call FillCompositeData(currenWorkSheet, obj, compositeArray)
+    Call FillData(currenWorkSheet, obj, compositeArray, "COMPOSITE_DECKdatalist", "colorCOMPOSITE_DECK", "noteCOMPOSITE_DECK", "unitCOMPOSITE_DECK", "ftCOMPOSITE_DECK", "inchCOMPOSITE_DECK", "fractionDropCOMPOSITE_DECK", "pmCOMPOSITE_DECK", 2)
     
     ' call roof deck
     Call GetWorksheet("ROOF DECK", currenWorkSheet)
-    Call FillRoofData(currenWorkSheet, obj, roofDeckArray)
+    Call FillData(currenWorkSheet, obj, roofDeckArray, "ROOF_DECKdatalist", "", "noteROOF_DECK", "unitROOF_DECK", "ftROOF_DECK", "inchROOF_DECK", "fractionDropROOF_DECK", "pmROOF_DECK", 3)
     
     ' call partition panel
     Call GetWorksheet("PARTITION PANEL", currenWorkSheet)
-    Call FillPartitionData(currenWorkSheet, obj, partitionPanelArray)
+    Call FillData(currenWorkSheet, obj, partitionPanelArray, "PARTITION_PANELdatalist", "colorPARTITION_PANEL", "notePARTITION_PANEL", "unitPARTITION_PANEL", "ftPARTITION_PANEL", "inchPARTITION_PANEL", "fractionDropPARTITION_PANEL", "pmPARTITION_PANEL", 4)
     
     ' call liner panel
     Call GetWorksheet("LINER PANEL", currenWorkSheet)
-    Call FillLinerData(currenWorkSheet, obj, linearPanelArray)
-    
+    Call FillData(currenWorkSheet, obj, linearPanelArray, "LINER_PANELdatalist", "colorLINER_PANEL", "noteLINER_PANEL", "unitLINER_PANEL", "ftLINER_PANEL", "inchLINER_PANEL", "fractionDropLINER_PANEL", "pmLINER_PANEL", 5)
+       
     ' call siding panel
     Call GetWorksheet("SIDING PANEL", currenWorkSheet)
-    Call FillSidingData(currenWorkSheet, obj, sidingPanelArray)
+    Call FillData(currenWorkSheet, obj, sidingPanelArray, "SIDING_PANELdatalist", "colorSIDING_PANEL", "noteSIDING_PANEL", "unitSIDING_PANEL", "ftSIDING_PANEL", "inchSIDING_PANEL", "", "pmSIDING_PANEL", 6)
     
     ' call insulation
     Call GetWorksheet("INSULATION", currenWorkSheet)
-    Call FillInsulationData(currenWorkSheet, obj, insulationArray)
+    Call FillData(currenWorkSheet, obj, insulationArray, "INSULATIONdatalist", "colorINSULATION", "noteINSULATION", "unitINSULATION", "ftINSULATION", "inchINSULATION", "fractionDropINSULATION", "pmINSULATION", 7)
     
     ' call anchors
     Call GetWorksheet("ANCHORS", currenWorkSheet)
-    Call FillAnchorsData(currenWorkSheet, obj, anchorsArray)
+    Call FillData(currenWorkSheet, obj, anchorsArray, "ANCHORSdatalist", "colorANCHORS", "noteANCHORS", "unitANCHORS", "ftANCHORS", "inchANCHORS", "fractionDropANCHORS", "pmANCHORS", 8)
     
     ' call fasteners
     Call GetWorksheet("FASTENERS", currenWorkSheet)
-    Call FillFastnersData(currenWorkSheet, obj, fastenersArray)
+    Call FillData(currenWorkSheet, obj, fastenersArray, "FASTENERSdatalist", "colorFASTENERS", "noteFASTENERS", "unitFASTENERS", "ftFASTENERS", "inchFASTENERS", "fractionDropFASTENERS", "pmFASTENERS", 9)
     
     ' call misc
     Call GetWorksheet("MISC", currenWorkSheet)
-    Call FillMiscData(currenWorkSheet, obj, miscArray)
+     Call FillData(currenWorkSheet, obj, miscArray, "MISCdatalist", "colorMISC", "noteMISC", "unitMISC", "ftMISC", "inchMISC", "fractionDropMISC", "pmMISC", 10)
     
     MsgBox "Script execution completed. Please verify the data, Save cutlist and press OK to close the browser", vbInformation, "Script Completed"
                        
@@ -144,7 +144,7 @@ Sub Delay(ms)
     Loop
 End Sub
 
-Sub FillStructuralData(Worksheet, obj, ByRef myArray)
+Sub FillData(Worksheet, obj, ByRef myArray, description, colord, note, unit, ft, inch, fractionDrop, pm, index)
     
     ' Iterate over non-empty values starting from cell C3
     Dim row, column
@@ -154,17 +154,28 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
      ' variables to collecy the information from the excel sheet
     Dim LGdescription
     Dim PMValue
-    Dim Color
+    Dim color
     Dim Notes
     Dim Units
     Dim Dimentions, parts, var1, var2, var3
     
     ' obj.FindElementById("STRUCTURALdatalist").SendKeys (LGdescription)
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
+    Do While Not IsEmpty(Worksheet.Cells(row, column).Value) Or Not IsEmpty(Worksheet.Cells(row + 1, column).Value)
+    
+        If IsEmpty(Worksheet.Cells(row, 3).Value) Then
+            ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(index)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+
+                row = row + 1
+        End If
+        
         ' Capture the value from the worksheet
         LGdescription = Worksheet.Cells(row, 3).Value
         PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
+        color = Worksheet.Cells(row, 8).Value
         Notes = Worksheet.Cells(row, 10).Value
         Units = Worksheet.Cells(row, 11).Value
         Dimentions = Worksheet.Cells(row, 5).Value
@@ -172,8 +183,9 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
         ' Flag to indicate if the target string is found
         Dim found
         found = False
-        
+      
         ' Flag to indicate if the description is same as above row
+        ' Used for custom items
         Dim isDescriptionSameAsAbove
         If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
             isDescriptionSameAsAbove = True
@@ -205,31 +217,26 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
          
         If found Then
         
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(1)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
+            ' Access the HTML element and set its value
+            obj.FindElementById(description).SendKeys (LGdescription)
+            
+            If Len(colord) > 0 Then
+                obj.FindElementById(colord).SendKeys (color)
             End If
             
-            ' Access the HTML element and set its value
-            obj.FindElementById("STRUCTURALdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorSTRUCTURAL").SendKeys (Color)
-            
-            obj.FindElementById("noteSTRUCTURAL").SendKeys (Notes)
-            obj.FindElementById("unitSTRUCTURAL").SendKeys (Units)
+            obj.FindElementById(note).SendKeys (Notes)
+            obj.FindElementById(unit).SendKeys (Units)
             
             ' Update dimensions
-            obj.FindElementById("ftSTRUCTURAL").SendKeys (var1)
-            obj.FindElementById("inchSTRUCTURAL").SendKeys (var2)
-            obj.FindElementById("fractionDropSTRUCTURAL").SendKeys (var3)
-            
+            obj.FindElementById(ft).SendKeys (var1)
+            obj.FindElementById(inch).SendKeys (var2)
+            If Len(fractionDrop) > 0 Then
+                obj.FindElementById(fractionDrop).SendKeys (var3)
+            End If
+
             ' Click on Add Row element
-            obj.FindElementById("pmSTRUCTURAL").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(1)
+            obj.FindElementById(pm).SendKeys (PMValue)
+            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(index)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
@@ -245,7 +252,7 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
                
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
+            obj.FindElementById("colorCUSTOM").SendKeys (color)
             
             obj.FindElementById("noteCUSTOM").SendKeys (Notes)
             obj.FindElementById("unitCUSTOM").SendKeys (Units)
@@ -259,1202 +266,6 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
             obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
             
             ' Extra Elements on CUSTOM
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillCompositeData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(2)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("COMPOSITE_DECKdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCOMPOSITE_DECK").SendKeys (Color)
-            
-            obj.FindElementById("noteCOMPOSITE_DECK").SendKeys (Notes)
-            obj.FindElementById("unitCOMPOSITE_DECK").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCOMPOSITE_DECK").SendKeys (var1)
-            obj.FindElementById("inchCOMPOSITE_DECK").SendKeys (var2)
-            obj.FindElementById("fractionDropCOMPOSITE_DECK").SendKeys (var3)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmCOMPOSITE_DECK").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(2)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-        
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillRoofData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(3)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("ROOF_DECKdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("noteROOF_DECK").SendKeys (Notes)
-            obj.FindElementById("unitROOF_DECK").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftROOF_DECK").SendKeys (var1)
-            obj.FindElementById("inchROOF_DECK").SendKeys (var2)
-            obj.FindElementById("fractionDropROOF_DECK").SendKeys (var3)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmROOF_DECK").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(3)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillPartitionData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(4)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("PARTITION_PANELdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorPARTITION_PANEL").SendKeys (Color)
-            
-            obj.FindElementById("notePARTITION_PANEL").SendKeys (Notes)
-            obj.FindElementById("unitPARTITION_PANEL").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftPARTITION_PANEL").SendKeys (var1)
-            obj.FindElementById("inchPARTITION_PANEL").SendKeys (var2)
-            obj.FindElementById("fractionDropPARTITION_PANEL").SendKeys (var3)
-
-            ' Click on Add Row element
-            obj.FindElementById("pmPARTITION_PANEL").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(4)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-        
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillLinerData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(5)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("LINER_PANELdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorLINER_PANEL").SendKeys (Color)
-            
-            obj.FindElementById("noteLINER_PANEL").SendKeys (Notes)
-            obj.FindElementById("unitLINER_PANEL").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftLINER_PANEL").SendKeys (var1)
-            obj.FindElementById("inchLINER_PANEL").SendKeys (var2)
-            obj.FindElementById("fractionDropLINER_PANEL").SendKeys (var3)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmLINER_PANEL").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(5)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-            
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillSidingData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(6)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("SIDING_PANELdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorSIDING_PANEL").SendKeys (Color)
-            
-            obj.FindElementById("noteSIDING_PANEL").SendKeys (Notes)
-            obj.FindElementById("unitSIDING_PANEL").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftSIDING_PANEL").SendKeys (var1)
-            obj.FindElementById("inchSIDING_PANEL").SendKeys (var2)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmSIDING_PANEL").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(6)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-        
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillInsulationData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(7)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("INSULATIONdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorINSULATION").SendKeys (Color)
-            
-            obj.FindElementById("noteINSULATION").SendKeys (Notes)
-            obj.FindElementById("unitINSULATION").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftINSULATION").SendKeys (var1)
-            obj.FindElementById("inchINSULATION").SendKeys (var2)
-            obj.FindElementById("fractionDropINSULATION").SendKeys (var3)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmINSULATION").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(7)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-        
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillAnchorsData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(8)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("ANCHORSdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorANCHORS").SendKeys (Color)
-            
-            obj.FindElementById("noteANCHORS").SendKeys (Notes)
-            obj.FindElementById("unitANCHORS").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftANCHORS").SendKeys (var1)
-            obj.FindElementById("inchANCHORS").SendKeys (var2)
-            obj.FindElementById("fractionDropANCHORS").SendKeys (var3)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmANCHORS").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(8)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-        
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillFastnersData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-        
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(9)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-                    
-            ' Access the HTML element and set its value
-            obj.FindElementById("FASTENERSdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorFASTENERS").SendKeys (Color)
-            
-            obj.FindElementById("noteFASTENERS").SendKeys (Notes)
-            obj.FindElementById("unitFASTENERS").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftFASTENERS").SendKeys (var1)
-            obj.FindElementById("inchFASTENERS").SendKeys (var2)
-            obj.FindElementById("fractionDropFASTENERS").SendKeys (var3)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmFASTENERS").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(9)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-            
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Extra Elements on CUSTOM
-            
-            Dim customga
-            customga = Worksheet.Cells(row, 4).Value
-            
-            If customga = "" Then
-                customga = "0"
-            End If
-            
-            obj.FindElementById("CUSTOMga").SendKeys (customga)
-            obj.FindElementById("CUSTOMcoilWidth").SendKeys ("0")
-            
-            ' Click on Add Row element
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(11)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        End If
-        row = row + 1
-    Loop
-        
-End Sub
-
-Sub FillMiscData(Worksheet, obj, ByRef myArray)
-    
-    ' Iterate over non-empty values starting from cell C3
-    Dim row, column
-    row = 3 ' Start from row 3
-    column = 1 ' Start from column 1
-
-     ' variables to collect the information from the excel sheet
-    Dim LGdescription
-    Dim PMValue
-    Dim Color
-    Dim Notes
-    Dim Units
-    Dim Dimentions, parts, var1, var2, var3
-    
-    Do While Not IsEmpty(Worksheet.Cells(row, column).Value)
-        ' Capture the value from the worksheet
-        LGdescription = Worksheet.Cells(row, 3).Value
-        PMValue = Worksheet.Cells(row, 2).Value
-        Color = Worksheet.Cells(row, 8).Value
-        Notes = Worksheet.Cells(row, 10).Value
-        Units = Worksheet.Cells(row, 11).Value
-        Dimentions = Worksheet.Cells(row, 5).Value
-        
-        ' Flag to indicate if the target string is found
-        Dim found
-        found = False
-        
-        ' Flag to indicate if the description is same as above row
-        Dim isDescriptionSameAsAbove
-        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
-            isDescriptionSameAsAbove = True
-        Else
-            isDescriptionSameAsAbove = False
-        End If
-               
-        ' Loop through the array and check each element
-        For i = 0 To UBound(myArray)
-            Dim temp1
-            temp1 = myArray(i)
-            temp1 = Trim(temp1)
-            
-            Dim temp2
-            temp2 = LGdescription
-            temp2 = Trim(temp2)
-            
-            If temp1 = temp2 Then
-                ' Target string found in the array
-                LGdescription = myArray(i)
-                found = True
-                Exit For
-            End If
-        Next
-        
-        ' Split the dimension into three different variables
-        Call SplitDimensions(Dimentions, var1, var2, var3)
-         
-        If found Then
-        
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove And Not row = 3 Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(10)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-            
-            ' Access the HTML element and set its value
-            obj.FindElementById("MISCdatalist").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorMISC").SendKeys (Color)
-            
-            obj.FindElementById("noteMISC").SendKeys (Notes)
-            obj.FindElementById("unitMISC").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftMISC").SendKeys (var1)
-            obj.FindElementById("inchMISC").SendKeys (var2)
-            obj.FindElementById("fractionDropMISC").SendKeys (var3)
-            
-            ' Click on Add Row element
-            obj.FindElementById("pmMISC").SendKeys (PMValue)
-            Set parentElement = obj.FindElementsByClass("CutlistTable").Item(10)
-            Set childElement = parentElement.FindElementByClass("btn-outline-success")
-            childElement.Click
-        Else
-            
-            ' Add a blank line
-            If Not isDescriptionSameAsAbove Then
-                ' Click on Add Blank element
-                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
-                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
-                childBlankElement.SendKeys ("a")
-                childBlankElement.Click
-            End If
-        
-            ' Access the HTML element and set its value
-            obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
-            
-            obj.FindElementById("colorCUSTOM").SendKeys (Color)
-            
-            obj.FindElementById("noteCUSTOM").SendKeys (Notes)
-            obj.FindElementById("unitCUSTOM").SendKeys (Units)
-            
-            ' Update dimensions
-            obj.FindElementById("ftCUSTOM").SendKeys (var1)
-            obj.FindElementById("inchCUSTOM").SendKeys (var2)
-            obj.FindElementById("fractionDropCUSTOM").SendKeys (var3)
-                              
-            ' Add PM
-            obj.FindElementById("pmCUSTOM").SendKeys (PMValue)
-            
-            ' Add extra custom items
             Dim customga
             customga = Worksheet.Cells(row, 4).Value
             
@@ -1521,6 +332,10 @@ Function WorksheetExists(wb As Workbook, sheetName As String) As Boolean
     On Error GoTo 0
     WorksheetExists = Not ws Is Nothing
 End Function
+
+
+
+
 
 
 

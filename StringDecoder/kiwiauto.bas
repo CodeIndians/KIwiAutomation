@@ -173,6 +173,15 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+            
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -195,6 +204,16 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(1)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("STRUCTURALdatalist").SendKeys (LGdescription)
             
@@ -214,6 +233,15 @@ Sub FillStructuralData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+        
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
                
@@ -279,6 +307,14 @@ Sub FillCompositeData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -301,6 +337,16 @@ Sub FillCompositeData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(2)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("COMPOSITE_DECKdatalist").SendKeys (LGdescription)
             
@@ -320,6 +366,15 @@ Sub FillCompositeData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+        
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -385,6 +440,14 @@ Sub FillRoofData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -407,6 +470,16 @@ Sub FillRoofData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(3)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("ROOF_DECKdatalist").SendKeys (LGdescription)
             
@@ -424,6 +497,14 @@ Sub FillRoofData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -489,6 +570,14 @@ Sub FillPartitionData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -511,6 +600,16 @@ Sub FillPartitionData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(4)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("PARTITION_PANELdatalist").SendKeys (LGdescription)
             
@@ -530,6 +629,15 @@ Sub FillPartitionData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+        
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -595,6 +703,14 @@ Sub FillLinerData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -617,6 +733,16 @@ Sub FillLinerData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(5)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("LINER_PANELdatalist").SendKeys (LGdescription)
             
@@ -636,6 +762,15 @@ Sub FillLinerData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+            
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -701,6 +836,14 @@ Sub FillSidingData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -723,6 +866,16 @@ Sub FillSidingData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(6)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("SIDING_PANELdatalist").SendKeys (LGdescription)
             
@@ -741,6 +894,15 @@ Sub FillSidingData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+        
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -806,6 +968,14 @@ Sub FillInsulationData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -828,6 +998,16 @@ Sub FillInsulationData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(7)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("INSULATIONdatalist").SendKeys (LGdescription)
             
@@ -847,6 +1027,15 @@ Sub FillInsulationData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+        
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -912,6 +1101,14 @@ Sub FillAnchorsData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -934,6 +1131,16 @@ Sub FillAnchorsData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(8)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("ANCHORSdatalist").SendKeys (LGdescription)
             
@@ -953,6 +1160,15 @@ Sub FillAnchorsData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+        
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -1018,6 +1234,14 @@ Sub FillFastnersData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+        
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -1040,6 +1264,16 @@ Sub FillFastnersData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(9)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+                    
             ' Access the HTML element and set its value
             obj.FindElementById("FASTENERSdatalist").SendKeys (LGdescription)
             
@@ -1059,6 +1293,16 @@ Sub FillFastnersData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+            
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             
@@ -1125,6 +1369,14 @@ Sub FillMiscData(Worksheet, obj, ByRef myArray)
         Dim found
         found = False
         
+        ' Flag to indicate if the description is same as above row
+        Dim isDescriptionSameAsAbove
+        If Worksheet.Cells(row - 1, 3).Value = Worksheet.Cells(row, 3).Value Then
+            isDescriptionSameAsAbove = True
+        Else
+            isDescriptionSameAsAbove = False
+        End If
+               
         ' Loop through the array and check each element
         For i = 0 To UBound(myArray)
             Dim temp1
@@ -1147,6 +1399,16 @@ Sub FillMiscData(Worksheet, obj, ByRef myArray)
         Call SplitDimensions(Dimentions, var1, var2, var3)
          
         If found Then
+        
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove And Not row = 3 Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(10)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+            
             ' Access the HTML element and set its value
             obj.FindElementById("MISCdatalist").SendKeys (LGdescription)
             
@@ -1166,6 +1428,16 @@ Sub FillMiscData(Worksheet, obj, ByRef myArray)
             Set childElement = parentElement.FindElementByClass("btn-outline-success")
             childElement.Click
         Else
+            
+            ' Add a blank line
+            If Not isDescriptionSameAsAbove Then
+                ' Click on Add Blank element
+                Set parentBlankElement = obj.FindElementsByClass("CutlistTable").Item(11)
+                Set childBlankElement = parentBlankElement.FindElementByClass("btn-outline-dark")
+                childBlankElement.SendKeys ("a")
+                childBlankElement.Click
+            End If
+        
             ' Access the HTML element and set its value
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
             

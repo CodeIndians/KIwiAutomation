@@ -158,6 +158,7 @@ Sub FillData(Worksheet, obj, ByRef myArray, description, colord, note, unit, ft,
     Dim Notes
     Dim Units
     Dim Dimentions, parts, var1, var2, var3
+    Dim Fab
     
     ' obj.FindElementById("STRUCTURALdatalist").SendKeys (LGdescription)
     Do While Not IsEmpty(Worksheet.Cells(row, column).Value) Or Not IsEmpty(Worksheet.Cells(row + 1, column).Value)
@@ -179,6 +180,7 @@ Sub FillData(Worksheet, obj, ByRef myArray, description, colord, note, unit, ft,
         Notes = Worksheet.Cells(row, 10).Value
         Units = Worksheet.Cells(row, 11).Value
         Dimentions = Worksheet.Cells(row, 5).Value
+        Fab = Worksheet.Cells(row, 9).Value
         
         ' Flag to indicate if the target string is found
         Dim found
@@ -234,6 +236,10 @@ Sub FillData(Worksheet, obj, ByRef myArray, description, colord, note, unit, ft,
                 obj.FindElementById(fractionDrop).SendKeys (var3)
             End If
 
+            If Len(Fab) > 0 Then
+                obj.FindElementById("punchSTRUCTURAL").SendKeys (Fab)
+            End If
+
             ' Click on Add Row element
             obj.FindElementById(pm).SendKeys (PMValue)
             Set parentElement = obj.FindElementsByClass("CutlistTable").Item(index)
@@ -253,6 +259,10 @@ Sub FillData(Worksheet, obj, ByRef myArray, description, colord, note, unit, ft,
             obj.FindElementById("CUSTOMDescription").SendKeys (LGdescription)
                
             obj.FindElementById("colorCUSTOM").SendKeys (color)
+
+            If Len(Fab) > 0 Then
+                obj.FindElementById("punchCUSTOM").SendKeys (Fab)
+            End If
             
             obj.FindElementById("noteCUSTOM").SendKeys (Notes)
             obj.FindElementById("unitCUSTOM").SendKeys (Units)
